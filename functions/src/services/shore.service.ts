@@ -10,7 +10,7 @@ const db = admin.firestore().collection('shores');
 
 export const getAllShoreService = async (paramPaginator: ParamPaginator) => {
     const query = await paginatorHandler(db, paramPaginator);
-    const shores = await query.get();
+    const shores = await query.where('status', '!=', 'INACTIVA').get();
     return shores.docs.map(doc => (
         { 
             id: doc.id, ...doc.data(),
