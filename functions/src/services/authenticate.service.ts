@@ -23,7 +23,8 @@ export const resetPasswordService = async (email: string): Promise<string> => {
 
 export const createUserAuthAloneService = async (email: string): Promise<any> => {
     const newUser = await admin.auth().createUser({
-        email
+        email,
+        password: 'admin$admin!'
     })
     
     if(!newUser){

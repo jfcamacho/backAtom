@@ -12,7 +12,7 @@ export const getAllShoreKindsService = async (req: Request) => {
     return shoreKinds.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 }
 
-export const getShoreKindByIdService = async (id: string) => {
+export const getShoreKindByIdService = async (id: string): Promise<any> => {
     const shoreKind = await db.doc(id).get();
     if (!shoreKind.exists) {
         throw new HttpErrorService("No se ha encontrado la tarea solicitada", 404);
@@ -22,7 +22,7 @@ export const getShoreKindByIdService = async (id: string) => {
 
 export const createShoreKindService = async (data: any) => {
     const createdAt = new Date();
-    data.status = 'ACTIVE';
+    data.status = 'ACTIVA';
     data.createdAt = createdAt;
     data.updatedAt = createdAt;
 
@@ -39,7 +39,10 @@ export const updateShoreKindService = async (id: string, data: any) => {
     if(!shoreKindRef.exists){
         throw new HttpErrorService("No se ha encontrado la tarea solicitada", 404);
     }
+
     data.updatedAt = new Date();
+    delete data.createdAt
+    delete data.id
 
     const newObject = { ...shoreKindRef.data(), ...data };
     await db.doc(id).update(newObject);

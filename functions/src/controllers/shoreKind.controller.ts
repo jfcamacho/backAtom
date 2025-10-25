@@ -45,7 +45,7 @@ export const updateShoreKindController = async (req: Request, res: Response) => 
 export const deleteShoreKindController = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const updatedShoreKind = await updateShoreKindService(id, { status: 'INACTIVE',});
+        const updatedShoreKind = await updateShoreKindService(id, { status: 'INACTIVA',});
         res.status(200).json(updatedShoreKind);
     } catch (error: any) {
         manageErrorResponse(error, res);

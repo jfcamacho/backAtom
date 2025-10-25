@@ -53,7 +53,7 @@ export const updateUserController = async (req: Request, res: Response) => {
 export const deleteUserController = async (req: Request, res: Response) => {
     try {
         const {id} = req.params
-        await updateUserService(id, {status: 'INACTIVE'})
+        await updateUserService(id, {status: 'INACTIVA'})
         res.status(200).json({message: `Usuario con id: ${id} correctamente eliminado`})
     } catch (error: any) {
         manageErrorResponse(error, res);

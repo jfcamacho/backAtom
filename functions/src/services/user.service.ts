@@ -35,7 +35,7 @@ export const getUserByIdService = async (id: string) => {
 
 export const createUserService = async (data: any) => {
   const createAt = new Date();
-  data.status = 'ACTIVE';
+  data.status = 'ACTIVA';
   data.createdAt = createAt;
   data.updatedAt = createAt;
 
@@ -81,8 +81,8 @@ export const createUserService = async (data: any) => {
 
 export const createUserAloneService = async (data: any) => {
   const createAt = new Date();
-  data.status = 'ACTIVE';
-  data.name = 'Nuevo usuario'
+  data.status = 'ACTIVA';
+  data.firstName = 'Nuevo usuario'
   data.createdAt = createAt;
   data.updatedAt = createAt;
 
@@ -138,6 +138,8 @@ export const updateUserService = async (id: string, data: any) => {
     });
 
     data.updatedAt = new Date();
+    delete data.createdAt
+    delete data.id
     
     const newObject = { ...user.data(), ...data };
 

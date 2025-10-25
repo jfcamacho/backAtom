@@ -2,6 +2,7 @@ import { admin } from '../config/firebase';
 import { HttpErrorService } from '../utils/httpError.utils';
 import { ParamPaginator } from '../utils/interfaces/param-paginator.interface';
 import { paginatorHandler } from '../utils/paginator.service';
+import { validatioShoreStatusService } from '../utils/validationShore.service';
 import { getShoreKindByIdService } from './shoreKind.service';
 import { getUserByIdService } from './user.service';
 
@@ -10,18 +11,25 @@ const db = admin.firestore().collection('shores');
 export const getAllShoreService = async (paramPaginator: ParamPaginator) => {
     const query = await paginatorHandler(db, paramPaginator);
     const shores = await query.get();
-    return shores.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return shores.docs.map(doc => (
+        { 
+            id: doc.id, ...doc.data(),
+            updatedAt: doc.data()['updatedAt']?.toDate(),
+            createdAt: doc.data()['createdAt']?.toDate()
+        }));
 }
 
 export const createShoreService = async (data: any) => {
     
     await getUserByIdService(data.userId)
-    await getShoreKindByIdService(data.shoreKindId)
+    const shore = await getShoreKindByIdService(data.shoreKindId)
 
     const createdAt = new Date();
-    data.status = 'ACTIVE';
+    data.status = 'ACTIVA';
     data.createdAt = createdAt;
     data.updatedAt = createdAt;
+    data.kind = shore.kind
+    data.kindDescription = shore.description
 
     const shoreRef = await db.add(data);
     const newShore = await shoreRef.get();
@@ -46,7 +54,14 @@ export const updateShoreService = async (id: string, data: any) => {
     }
 
     data.updatedAt = new Date();
+    delete data.createdAt
+    delete data.id
 
+    const validateShore = await validatioShoreStatusService(shoreDoc.data()?.status, data.status)
+
+    if(!validateShore.response){
+        throw new HttpErrorService(validateShore.message, 404)
+    }
     await db.doc(id).update({...shoreDoc.data(), ...data});
     const updatedShoreDoc = await db.doc(id).get();
     return { 

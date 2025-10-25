@@ -4,6 +4,7 @@ import HealthRoute from "./health.route";
 import authenticateRoute from "./authenticate.route";
 import shoreKindRouter from "./shoreKind.route";
 import shoreRouter from "./shore.route";
+import configRoute from "./config.route";
 
 const router = Router();
 
@@ -11,6 +12,7 @@ router.use("/users", UserRoute)
 router.use("/authenticate", authenticateRoute)
 router.use("/shoreKind", shoreKindRouter)
 router.use("/shore", shoreRouter)
+router.use("/config", configRoute)
 
 router.get("/healthCheck", HealthRoute)
 
